@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="PurchaseMapper">
+ 	
+ 	
+	<resultMap id="pcSelectMap" type="purchase">
+		<result property="tranNo" 					column="tran_no" 			jdbcType="INTEGER"/>
+		<!-- <result property="purchaseProd.prodNo"		column="prod_no" 			jdbcType="INTEGER" />
+		<result property="purchaseProd.prodName"	column="prod_name"			jdbcType="VARCHAR" /> -->
+		<result property="buyer.userId" 			column="buyer_id" 			jdbcType="VARCHAR" />
+		<result property="buyer.role" 				column="role" 				jdbcType="VARCHAR" />
+		<result property="paymentOption"	 		column="payment_option" 	jdbcType="CHAR" />
+		<result property="receiverName" 			column="receiver_name" 		jdbcType="VARCHAR" />
+		<result property="receiverPhone" 			column="receiver_phone" 	jdbcType="VARCHAR" />
+		<result property="divyAddr" 				column="demailaddr" 		jdbcType="VARCHAR" />
+		<result property="divyRequest"				column="dlvy_request"		jdbcType="VARCHAR"/>
+		<result property="tranCode"					column="tran_status_code"	jdbcType="VARCHAR"/>
+		<result property="orderDate"				column="order_data" 		jdbcType="DATE"/>
+		<result property="divyDate"					column="dlvy_date"			jdbcType="DATE"/>
+		<result property="tranNum" 					column="tran_num"			jdbcType="INTEGER"/>
+		
+		<association property="purchaseProd"  javaType="product">
+			<id 	property="prodNo" 		column="prod_no" 			jdbcType="NUMERIC"/>
+			<result property="prodName" 	column="prod_name" 			jdbcType="VARCHAR"/>
+			<result property="price" 		column="price" 				jdbcType="NUMERIC"/>
+			<result property="regDate"		column="prod_reg_date" 		jdbcType="DATE"/>
+		</association>
+		
+	</resultMap>
+	
+	<!-- SQL : INSERT -->
+	<insert 	id="insertPurchase"		parameterType="purchase" >
+	 	INSERT
+		INTO transaction( tran_no , prod_no, buyer_id, payment_option, receiver_name, receiver_phone, demailaddr, dlvy_request, tran_status_code, order_data, dlvy_date, tran_num) 
+		VALUES	 (	seq_transaction_tran_no.NEXTVAL , #{purchaseProd.prodNo} , #{buyer.userId} , #{paymentOption} , #{receiverName:VARCHAR} , 
+							#{receiverPhone:VARCHAR}, #{divyAddr:VARCHAR}, #{divyRequest:VARCHAR}, '1' , SYSDATE, #{divyDate:VARCHAR}, #{tranNum})
+	 </insert>
+	 
+	 <!-- SQL : SELECT ONE -->
+	 <select 	id="getPurchase"	parameterType="int"	resultMap="pcSelectMap">
+		SELECT
+		*
+		FROM transaction t, product p, users u
+		<where>
+			t.prod_no = p.prod_no
+			AND u.user_id = t.buyer_id
+			AND t.tran_no = #{value}
+		</where>
+		
+	 </select>
+	 
+	 <!-- SQL : UPDATE -->
+	 <update	id="updatePurchase"	parameterType="purchase" >
+	   	UPDATE transaction
+	   	<set>
+	   		payment_option		= #{paymentOption} ,
+			receiver_name		= #{receiverName},
+			receiver_phone 		= #{receiverPhone:VARCHAR} ,
+			demailaddr			= #{divyAddr:VARCHAR},
+			dlvy_request		= #{divyRequest:VARCHAR},
+			dlvy_date			= #{divyDate:VARCHAR}
+	   	</set>
+	   	WHERE tran_no = #{tranNo}
+	 </update>
+	 
+	 <update id="updateTranCode" parameterType="purchase">
+	 	UPDATE transaction
+	 	<set>
+	 		tran_status_code = #{tranCode}
+	 	</set>
+	 	WHERE tran_no = #{tranNo}
+	 </update>
+		 
+	<!-- SQL : SELECT LIST -->
+	<select  id="getPcList"  parameterType="hashmap"		resultMap="pcSelectMap">
+	  	SELECT * 
+		FROM (		SELECT inner_table. * ,  ROWNUM AS row_seq  	
+					FROM (		SELECT p.prod_name , t.* 
+								FROM product p, transaction t 
+								WHERE p.prod_no = t.prod_no(+) 
+								AND t.buyer_id = #{buyerId}
+								ORDER BY p.prod_no DESC ) inner_table 	
+					WHERE ROWNUM &lt;= #{search.endRowNum} )
+		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
+	 </select>
+	 
+	 <select  id="getSaleList"  parameterType="hashmap"		resultMap="pcSelectMap">
+	  	SELECT * 
+		FROM (		SELECT inner_table. * ,  ROWNUM AS row_seq  	
+					FROM (		SELECT p.prod_no, p.prod_name, t.tran_no, t.tran_num, t.buyer_id, t.receiver_name, t.demailaddr,t.dlvy_date, t.tran_status_code 
+								FROM product p, transaction t 
+								WHERE p.prod_no = t.prod_no 
+								AND p.prod_no=#{prodNo}
+								ORDER BY t.order_data DESC ) inner_table 	
+					WHERE ROWNUM &lt;= #{search.endRowNum} )
+		WHERE row_seq BETWEEN #{search.startRowNum} AND #{search.endRowNum}
+	 </select>
+	
+	<!-- SQL : SELECT ROW Count -->	 
+	 <select  id="getTotalCount"  parameterType="string"	 resultType="int">
+	  	SELECT COUNT(*)
+	  	FROM(	SELECT *
+						FROM transaction
+						WHERE buyer_id = #{value} ) countTable						
+	 </select>
+	 
+	 <select  id="getProdCount"  parameterType="int"	 resultType="int">
+	  	SELECT COUNT(*)
+	  	FROM(	SELECT *
+						FROM transaction
+						WHERE prod_no = #{value} ) countTable						
+	 </select>
+	 
+	 <update	id="updateProdNum"	parameterType="purchase">
+	   	UPDATE product
+	   	<set>
+	   		prod_num 			= prod_num - #{tranNum}
+	   	</set>
+	   	WHERE prod_no = #{purchaseProd.prodNo}
+	 </update>
+	 
+</mapper>

@@ -59,13 +59,13 @@
 												<where>
 													p.prod_no = t.prod_no(+) 
 													<if test="searchCondition == 0 and searchKeyword !='' ">
-											 			AND p.prod_no = #{searchKeyword}
+											 			AND p.prod_no LIKE '%'||#{searchKeyword}||'%'
 													</if>
 													<if test="searchCondition == 1 and searchKeyword !='' ">
-											 			AND p.prod_name = #{searchKeyword}
+											 			AND p.prod_name LIKE '%'||#{searchKeyword}||'%'
 													</if>
 													<if test="searchCondition == 2 and searchKeyword !='' ">
-											 			AND p.price = #{searchKeyword}
+											 			AND p.price LIKE '%'||#{searchKeyword}||'%'
 													</if>
 												</where>
 											</if>
@@ -105,21 +105,23 @@
 	<!-- SQL : SELECT ROW Count -->	 
 	 <select  id="getTotalCount"  parameterType="search"	 resultType="int">
 	  	SELECT COUNT(*)
-	  	FROM(	SELECT *
-						FROM product
+	  	FROM(	SELECT DISTINCT p.* 
+						FROM product p, transaction t
 						<if test="searchCondition != null">
 							<where>
+								p.prod_no = t.prod_no(+) 
 								<if test="searchCondition == 0 and searchKeyword !='' ">
-						 			prod_no = #{searchKeyword}
+						 			AND p.prod_no LIKE '%'||#{searchKeyword}||'%'
 								</if>
 								<if test="searchCondition == 1 and searchKeyword !='' ">
-						 			prod_name = #{searchKeyword}
+						 			AND p.prod_name LIKE '%'||#{searchKeyword}||'%'
 								</if>
 								<if test="searchCondition == 2 and searchKeyword !='' ">
-						 			price = #{searchKeyword}
+						 			AND p.price LIKE '%'||#{searchKeyword}||'%'
 								</if>
 							</where>
-						</if> ) countTable						
+						</if> 
+						) countTable						
 	 </select>
 	 
 </mapper>

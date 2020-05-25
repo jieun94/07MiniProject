@@ -34,7 +34,13 @@
 	<bean id="transactionManager" 
 				class="org.springframework.jdbc.datasource.DataSourceTransactionManager" >
 		<property name="dataSource" ref="dataSource"/>
-	</bean>	
+	</bean>
+	
+	<!-- <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="euc-kr"/>
+        <property name="maxUploadSize" value="10000000"/>
+        <property name="uploadTempDir" value="uploadTempDir"/>
+   	</bean>	 -->
 	
 	<!-- Transaction Advice 생성 
 			:: method : transaction 적용 Method

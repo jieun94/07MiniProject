@@ -9,13 +9,16 @@
 	<resultMap id="reviewSelectMap" type="review">
 		<result property="reviewNo" 				column="review_no" 			jdbcType="INTEGER"/>
 		<result property="reviewTran.tranNo"		column="tran_no" 			jdbcType="INTEGER" />
-		<result property="reviewProd.prodNo"		column="prod_no"			jdbcType="INTEGER" /> 
-		<result property="reviewProd.prodName"		column="prod_name"			jdbcType="VARCHAR" /> 
 		<result property="reviewBuyer.userId" 		column="buyer_id" 			jdbcType="VARCHAR" />
 		<result property="reviewBuyer.userName" 	column="user_name" 			jdbcType="VARCHAR" />
 		<result property="reviewDetail"				column="review_detail" 		jdbcType="VARCHAR"/>
 		<result property="reviewDate"				column="reg_date"			jdbcType="DATE"/>
 		<result property="reviewFileName" 			column="image_file"			jdbcType="VARCHAR"/>	
+		
+		<association property="reviewProd"  javaType="product">
+			<id 	property="prodNo" 		column="prod_no" 			jdbcType="NUMERIC"/>
+			<result property="prodName" 	column="prod_name" 			jdbcType="VARCHAR"/>
+		</association>
 	</resultMap>
 	
 	<insert 	id="insertReview"		parameterType="review" >

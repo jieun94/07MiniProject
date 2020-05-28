@@ -69,7 +69,7 @@ public class ReviewController {
 		reviewService.addReview(review);
 		
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("forward:/review/addReviewView.jsp");
+		modelAndView.setViewName("forward:/review/getReview.jsp");
 		modelAndView.addObject("review",review);
 		
 		return modelAndView;

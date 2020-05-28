@@ -73,7 +73,7 @@
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tr>
 					<td width="85%" class="ct_write01">${prod.prodName}</td>
-					<td align="left">명 구매중</td>
+					<td align="left">${prod.purchaseCount}개 구매</td>
 				</tr>
 			</table>
 		</td>

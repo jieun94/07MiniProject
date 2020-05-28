@@ -16,6 +16,7 @@
 		<result property="fileName" 	column="image_file" 		jdbcType="VARCHAR" />
 		<result property="regDate" 		column="reg_date" 			jdbcType="DATE" />
 		<result property="prodNum"		column="prod_num"			jdbcType="INTEGER"/>
+		<result property="purchaseCount" column="count" 			javaType="INTEGER"/>
 	</resultMap>
 	
 	<!-- SQL : INSERT -->
@@ -29,8 +30,10 @@
 	 <!-- SQL : SELECT ONE -->
 	 <select 	id="getProduct"	parameterType="int"	resultMap="prodSelectMap">
 		SELECT
-		prod_no, prod_name, prod_detail, manufacture_day, price, image_file, reg_date, prod_num
-		FROM product
+		*
+		FROM product, (SELECT SUM(tran_num) count
+	 					FROM transaction 
+						WHERE prod_no = #{value} )
 		WHERE prod_no = #{value}
 	 </select>
 	 
@@ -53,21 +56,24 @@
 	  	SELECT *
 	  	FROM (	SELECT inner_table.* , ROWNUM AS row_seq
 	  					FROM		(	SELECT 
-	  									DISTINCT p.* 
-	  									FROM product p, transaction t
+	  									DISTINCT p.* , vt.count
+	  									FROM product p, transaction t, (	SELECT 
+	  																		p.prod_no ,SUM(t.tran_num) count 
+	  																		FROM product p, transaction t 
+	  																		WHERE p.prod_no=t.prod_no(+) 
+	  																		GROUP BY p.prod_no	) vt
+	  									WHERE p.prod_no = t.prod_no(+) 
+	  									AND vt.prod_no = p.prod_no
 											<if test="searchCondition != null">
-												<where>
-													p.prod_no = t.prod_no(+) 
 													<if test="searchCondition == 0 and searchKeyword !='' ">
-											 			AND p.prod_no = #{searchKeyword}
+											 			AND p.prod_no LIKE '%'||#{searchKeyword}||'%'
 													</if>
 													<if test="searchCondition == 1 and searchKeyword !='' ">
-											 			AND p.prod_name = #{searchKeyword}
+											 			AND p.prod_name LIKE '%'||#{searchKeyword}||'%'
 													</if>
 													<if test="searchCondition == 2 and searchKeyword !='' ">
-											 			AND p.price = #{searchKeyword}
+											 			AND p.price LIKE '%'||#{searchKeyword}||'%'
 													</if>
-												</where>
 											</if>
 											<if test="orderColumn ==null">
 												ORDER BY p.reg_date DESC )inner_table 
@@ -88,6 +94,14 @@
 													ORDER BY p.price ASC )inner_table 
 												</if> 
 											</if>
+											<if test="orderColumn =='purchaseCount'">
+												<if test="order==1">
+													ORDER BY vt.count DESC NULLS LAST )inner_table 
+												</if>
+												<if test="order==2">
+													ORDER BY vt.count ASC NULLS FIRST)inner_table 
+												</if> 
+											</if>
 						WHERE ROWNUM &lt;= #{endRowNum} )
 		WHERE row_seq BETWEEN #{startRowNum} AND #{endRowNum} 
 	 </select>
@@ -105,21 +119,23 @@
 	<!-- SQL : SELECT ROW Count -->	 
 	 <select  id="getTotalCount"  parameterType="search"	 resultType="int">
 	  	SELECT COUNT(*)
-	  	FROM(	SELECT *
-						FROM product
+	  	FROM(	SELECT DISTINCT p.* 
+						FROM product p, transaction t
 						<if test="searchCondition != null">
 							<where>
+								p.prod_no = t.prod_no(+) 
 								<if test="searchCondition == 0 and searchKeyword !='' ">
-						 			prod_no = #{searchKeyword}
+						 			AND p.prod_no LIKE '%'||#{searchKeyword}||'%'
 								</if>
 								<if test="searchCondition == 1 and searchKeyword !='' ">
-						 			prod_name = #{searchKeyword}
+						 			AND p.prod_name LIKE '%'||#{searchKeyword}||'%'
 								</if>
 								<if test="searchCondition == 2 and searchKeyword !='' ">
-						 			price = #{searchKeyword}
+						 			AND p.price LIKE '%'||#{searchKeyword}||'%'
 								</if>
 							</where>
-						</if> ) countTable						
+						</if> 
+						) countTable						
 	 </select>
 	 
 </mapper>

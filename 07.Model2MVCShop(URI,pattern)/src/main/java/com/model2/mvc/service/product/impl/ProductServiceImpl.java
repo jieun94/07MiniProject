@@ -22,7 +22,7 @@ public class ProductServiceImpl implements ProductService{
 	@Autowired
 	@Qualifier("productDaoImpl")
 	private ProductDao productDao;
-	public void setUserDao(ProductDao productDao) {
+	public void setProductDao(ProductDao productDao) {
 		this.productDao = productDao;
 	}
 	

@@ -88,6 +88,7 @@
 			<c:if test="${search.orderColumn==null}">
 				<a href="/product/listProduct?menu=${param.menu}&orderColumn=prod_name&order=1">상품명 ▼</a>
 				<a href="/product/listProduct?menu=${param.menu}&orderColumn=price&order=1">가격 ▼</a>
+				<a href="/product/listProduct?menu=${param.menu}&orderColumn=purchaseCount&order=1">판매량 ▼</a>
 			</c:if>
 			<c:if test="${search.orderColumn!=null}">
 				<a href="/product/listProduct?menu=${param.menu}&orderColumn=prod_name&order=${param.orderColumn=='prod_name' && param.order=='1' ? "2" : "1" }">
@@ -101,6 +102,13 @@
 				가격
 				<c:choose>
 						<c:when test="${ param.orderColumn=='price' && param.order=='1'}">▲</c:when>
+						<c:otherwise>▼</c:otherwise>
+					</c:choose>
+				</a>
+				<a href="/product/listProduct?menu=${param.menu}&orderColumn=purchaseCount&order=${param.orderColumn=='purchaseCount' && param.order=='1' ? "2" : "1" }">
+				판매량
+				<c:choose>
+						<c:when test="${ param.orderColumn=='purchaseCount' && param.order=='1'}">▲</c:when>
 						<c:otherwise>▼</c:otherwise>
 					</c:choose>
 				</a>

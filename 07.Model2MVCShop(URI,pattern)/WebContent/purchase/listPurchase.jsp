@@ -85,6 +85,9 @@
 				<c:if test="${purchase.tranCode=='2  '}">
 					<a href="/purchase/updateTranCode?tranNo=${purchase.tranNo}&tranCode=3">물건도착</a>
 				</c:if>
+				<c:if test="${purchase.tranCode=='3  '}">
+					<a href="/review/addReview?tranNo=${purchase.tranNo}">리뷰작성</a>
+				</c:if>
 			</td>
 		</tr>
 		<tr>

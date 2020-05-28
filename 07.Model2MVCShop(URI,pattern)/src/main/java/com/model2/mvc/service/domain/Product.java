@@ -15,6 +15,7 @@ public class Product {
 	private String proTranCode;
 	private int tranNo;
 	private int prodNum;
+	private int purchaseCount;
 	
 	public Product(){
 	}
@@ -84,10 +85,19 @@ public class Product {
 		this.prodNum = prodNum;
 	}
 
+	public int getPurchaseCount() {
+		return purchaseCount;
+	}
+
+	public void setPurchaseCount(int purchaseCount) {
+		this.purchaseCount = purchaseCount;
+	}
+
 	// Override
 	public String toString() {
 		return "ProductVO : [fileName]" + fileName
 				+ "[manuDate]" + manuDate+ "[price]" + price + "[prodDetail]" + prodDetail
-				+ "[prodName]" + prodName + "[prodNo]" + prodNo+ "[tranNo]" + tranNo+ "[prodNum]" + prodNum + "[regDate]" + regDate;
+				+ "[prodName]" + prodName + "[prodNo]" + prodNo+ "[tranNo]" + tranNo
+				+ "[prodNum]" + prodNum + "[regDate]" + regDate + "[purchaseCount]" + purchaseCount;
 	}	
 }

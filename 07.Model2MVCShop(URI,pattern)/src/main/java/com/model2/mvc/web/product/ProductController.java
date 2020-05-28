@@ -60,6 +60,7 @@ public class ProductController {
 		
 		Product prod = prodService.getProduct(prodNo);
 		
+		
 		model.addAttribute("prod", prod);
 		User user = (User)session.getAttribute("user");
 		

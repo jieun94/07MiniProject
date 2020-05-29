@@ -102,6 +102,6 @@ public class User {
 	@Override
 	public String toString() {
 		return "UserVO : [userId] "+userId+" [userName] "+userName+" [password] "+password+" [role] "+ role
-			+" [ssn] "+ssn+" [phone] "+phone+" [email] "+email+" [regDate] "+regDate;
+			+" [ssn] "+ssn+" [phone] "+phone+" [addr] "+addr+" [email] "+email+" [regDate] "+regDate;
 	}
 }

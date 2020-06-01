@@ -2,10 +2,12 @@ package com.model2.mvc.service.domain;
 
 import java.sql.Date;
 
+import org.springframework.web.multipart.MultipartFile;
+
 
 public class Product {
 	
-	private String fileName;
+	private MultipartFile fileName;
 	private String manuDate;
 	private int price;
 	private String prodDetail;
@@ -26,12 +28,14 @@ public class Product {
 	public void setProTranCode(String proTranCode) {
 		this.proTranCode = proTranCode;
 	}
-	public String getFileName() {
+	public MultipartFile getFileName() {
 		return fileName;
 	}
-	public void setFileName(String fileName) {
+
+	public void setFileName(MultipartFile fileName) {
 		this.fileName = fileName;
 	}
+
 	public String getManuDate() {
 		return manuDate;
 	}

@@ -48,6 +48,15 @@
 		    </init-param>
 		    
 		    <load-on-startup>1</load-on-startup>
+		    
+		    <multipart-config>
+			<!-- 파일 업로드시 임시로 저장되는 장소 지정 -->
+			<location>C:\Users\user\git\repository\07MiniProject\07.Model2MVCShop(URI,pattern)\WebContent\images\uploadFiles</location>
+			<!-- 업로드 파일 사이즈 제한 : -1은 제한없음이다.(default 이어서 생략 가능) -->
+			<max-file-size>-1</max-file-size>
+			<!-- 임시파일을 만들 때의 기준 , 아니면 메모리를 사용 한다. -->
+			<file-size-threshold>1024</file-size-threshold>
+			</multipart-config>
   </servlet>
   
     <!-- //////////////////////////////////////////////////////////////////////////// 

@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.model2.mvc.common.Page;
 import com.model2.mvc.common.Search;
@@ -43,20 +45,18 @@ public class ProductController {
 	int pageSize;
 	
 	@RequestMapping(value="addProduct")
-	public String addProduct(@ModelAttribute("prod") Product prod, @RequestParam("file") MultipartFile file) throws Exception {
+	public String addProduct(@ModelAttribute("prod") Product prod, MultipartHttpServletRequest request) throws Exception {
 
 		System.out.println("/product/addProduct : GET / POST");
 		
-		String fname = file.getOriginalFilename();
-		if (fname.equals("")) {
-			prod.setFileName("null");
-	    } else {
-	    	prod.setFileName(fname);
-	    }
-		
-		file.transferTo(new File("C:\\Users\\user\\git\\repository\\07MiniProject\\07.Model2MVCShop(URI,pattern)\\WebContent\\images\\uploadFiles" + fname));
+		Map<String, MultipartFile> files = request.getFileMap();
+		CommonsMultipartFile cmf = (CommonsMultipartFile) files.get("file");
+		String path ="C:/Users/user/git/repository/07MiniProject/07.Model2MVCShop(URI,pattern)/WebContent/images/uploadFiles/"+cmf.getOriginalFilename();
+		prod.setFileName(cmf.getOriginalFilename());
 	    	
-		System.out.println(fname);
+    	File f = new File(path);
+    	cmf.transferTo(f);
+		
 		prod.setManuDate(prod.getManuDate().replace("-", ""));
 		prodService.addProduct(prod);
 		

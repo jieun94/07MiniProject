@@ -43,7 +43,7 @@ public class ProductController {
 	int pageSize;
 	
 	@RequestMapping(value="addProduct")
-	public String addProduct(@ModelAttribute("prod") Product prod, @RequestParam("FileName") MultipartFile file) throws Exception {
+	public String addProduct(@ModelAttribute("prod") Product prod, @RequestParam("fileName") MultipartFile file) throws Exception {
 
 		System.out.println("/product/addProduct : GET / POST");
 		

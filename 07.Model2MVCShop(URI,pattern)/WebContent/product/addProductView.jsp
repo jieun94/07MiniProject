@@ -183,7 +183,7 @@
 						<table width="100%" border="0" cellspacing="0" cellpadding="0">
 							<tr>
 								<td width="105">
-									<input type="file" name="fileName" class="ct_input_g" style="width:500px; height:20px"> 
+									<input type="file" name="file" class="ct_input_g" style="width:500px; height:20px"> 
 								</td>
 								<td > </td>
 							</tr>

@@ -7,7 +7,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class Product {
 	
-	private MultipartFile fileName;
+	private MultipartFile file;
+	private String fileName;
 	private String manuDate;
 	private int price;
 	private String prodDetail;
@@ -28,17 +29,34 @@ public class Product {
 	public void setProTranCode(String proTranCode) {
 		this.proTranCode = proTranCode;
 	}
-	public MultipartFile getFileName() {
+	public MultipartFile getFile() {
+		return file;
+	}
+
+	public void setFileName(MultipartFile file) {
+		this.file = file;
+	}
+
+	public String getFileName() {
 		return fileName;
 	}
 
-	public void setFileName(MultipartFile fileName) {
+	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
+	
+//	public String getFileName() {
+//		return fileName;
+//	}
+//
+//	public void setFileName(String fileName) {
+//		this.fileName = fileName;
+//	}
 
 	public String getManuDate() {
 		return manuDate;
 	}
+
 	public void setManuDate(String manuDate) {
 		this.manuDate = manuDate;
 	}

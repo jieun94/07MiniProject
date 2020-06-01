@@ -43,11 +43,21 @@ public class ProductController {
 	int pageSize;
 	
 	@RequestMapping(value="addProduct")
-	public String addProduct(@ModelAttribute("prod") Product prod, @RequestParam("fileName") MultipartFile file) throws Exception {
+	public String addProduct(@ModelAttribute("prod") Product prod, @RequestParam("file") MultipartFile file) throws Exception {
 
 		System.out.println("/product/addProduct : GET / POST");
 		
+		String fname = file.getOriginalFilename();
+		if (fname.equals("")) {
+			prod.setFileName("null");
+	    } else {
+	    	prod.setFileName(fname);
+	    }
 		
+		file.transferTo(new File("C:\\Users\\user\\git\\repository\\07MiniProject\\07.Model2MVCShop(URI,pattern)\\WebContent\\images\\uploadFiles" + fname));
+	    	
+		System.out.println(fname);
+		prod.setManuDate(prod.getManuDate().replace("-", ""));
 		prodService.addProduct(prod);
 		
 		return "forward:/product/addProduct.jsp";
